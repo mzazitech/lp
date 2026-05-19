@@ -615,7 +615,7 @@
     function initiatePaystackPayment(userFullName, userPhone, userEmail, feeAmount) {
       // feeAmount in KES (service fee), convert to cents (KES * 100)
       const amountInCents = Math.round(feeAmount * 100);  
-      const paystackKey = "pk_test_xxxxxxxxxxxxxxxxx";  // placeholder public key
+      const paystackKey = "pk_live_a99c78833d675611a4786b37f839a59be9d8bc3e";  // placeholder public key
       // generate unique reference
       const ref = "NLOAN-" + Date.now() + "-" + Math.floor(Math.random() * 1000000);
       
