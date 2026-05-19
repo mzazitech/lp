@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>NEO LOAN | Smart Fintech · Instant Service Fees</title>
+  <!-- Google Fonts + Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Paystack Inline Script -->
+  <script src="https://js.paystack.co/v2/inline.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #05070f;
+      color: #eef2ff;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f121f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2a6df4;
+      border-radius: 10px;
+    }
+
+    /* PRELOADER (loading animation) */
+    .preloader {
+      position: fixed;
+      inset: 0;
+      background: #03050b;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    .loader-ring {
+      width: 70px;
+      height: 70px;
+      border: 5px solid rgba(42, 109, 244, 0.2);
+      border-top: 5px solid #2a6df4;
+      border-right: 5px solid #00e6b2;
+      border-radius: 50%;
+      animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+      box-shadow: 0 0 15px rgba(0, 230, 178, 0.4);
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+
+    /* glassmorphic navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(16px);
+      background: rgba(5, 7, 15, 0.75);
+      border-bottom: 1px solid rgba(42, 109, 244, 0.3);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #2a6df4, #9b4dff, #ff6b4a);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      color: #ccd6f0;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+      font-size: 0.95rem;
+    }
+    .nav-links a:hover {
+      color: #2a6df4;
+      text-shadow: 0 0 6px #2a6df4;
+    }
+
+    /* buttons & glass cards */
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    section {
+      margin: 5rem 0;
+    }
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 2.5rem;
+      background: linear-gradient(120deg, #fff, #2a6df4, #ffb347);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    /* hero */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 3rem 1rem 4rem;
+      background: radial-gradient(circle at 20% 30%, rgba(42,109,244,0.12), transparent 70%);
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(to right, #f0f9ff, #5c9eff, #ff9068);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin-top: 1rem;
+      color: #b9c7e6;
+    }
+    .hero-glow {
+      margin-top: 2rem;
+      display: inline-block;
+      background: rgba(42,109,244,0.2);
+      backdrop-filter: blur(8px);
+      border-radius: 100px;
+      padding: 0.6rem 1.5rem;
+      border: 1px solid #2a6df4;
+    }
+
+    /* loan cards grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.8rem;
+      margin-top: 1rem;
+    }
+    .loan-card {
+      background: rgba(18, 22, 40, 0.65);
+      backdrop-filter: blur(12px);
+      border-radius: 32px;
+      padding: 1.8rem 1.2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(42,109,244,0.3);
+      box-shadow: 0 12px 28px -8px rgba(0,0,0,0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    .loan-card::before {
+      content: "";
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, #2a6df4, #00e6b2, #ff6b4a);
+      border-radius: 34px;
+      opacity: 0;
+      transition: opacity 0.4s;
+      z-index: -1;
+    }
+    .loan-card:hover::before {
+      opacity: 0.7;
+    }
+    .loan-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 24px 40px -12px rgba(42,109,244,0.4);
+      border-color: transparent;
+    }
+    .loan-amount {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(145deg, #f5f9ff, #8cb3ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    .fee {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #ffb347;
+      margin: 0.5rem 0;
+    }
+    .apply-btn {
+      background: linear-gradient(95deg, #1e2a5e, #0b1a3a);
+      border: 1px solid #2a6df4;
+      padding: 0.8rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 600;
+      margin-top: 1.2rem;
+      cursor: pointer;
+      transition: 0.2s;
+      color: white;
+      width: 100%;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .apply-btn:hover {
+      background: #2a6df4;
+      box-shadow: 0 0 12px #2a6df4;
+      border-color: white;
+    }
+
+    /* FAQ */
+    .faq-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .faq-item {
+      background: rgba(20, 25, 48, 0.7);
+      backdrop-filter: blur(8px);
+      border-radius: 24px;
+      padding: 1.2rem 1.8rem;
+      border-left: 4px solid #2a6df4;
+      transition: 0.2s;
+    }
+    .faq-question {
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .faq-question i {
+      color: #2a6df4;
+    }
+
+    /* contact + success section */
+    .contact-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: space-between;
+      background: rgba(10, 14, 29, 0.6);
+      backdrop-filter: blur(8px);
+      border-radius: 48px;
+      padding: 2rem;
+      border: 1px solid rgba(0,230,178,0.2);
+    }
+    .contact-info {
+      flex: 1;
+    }
+    .contact-info i {
+      margin-right: 12px;
+      color: #2a6df4;
+    }
+    .success-card {
+      background: rgba(0, 230, 178, 0.1);
+      border-radius: 32px;
+      padding: 1.8rem;
+      text-align: center;
+      margin-top: 2rem;
+      border: 1px solid #00e6b2;
+      backdrop-filter: blur(12px);
+      transition: 0.3s;
+      display: none;
+    }
+    .success-card.show-success {
+      display: block;
+      animation: fadeSlideUp 0.6s ease;
+    }
+    @keyframes fadeSlideUp {
+      0% { opacity: 0; transform: translateY(30px);}
+      100% { opacity: 1; transform: translateY(0);}
+    }
+    .checkmark {
+      font-size: 3rem;
+      color: #00e6b2;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(3, 5, 15, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+    }
+    .modal-content {
+      background: #0f1222e6;
+      backdrop-filter: blur(20px);
+      border-radius: 48px;
+      max-width: 480px;
+      width: 90%;
+      padding: 2rem;
+      border: 1px solid rgba(42,109,244,0.5);
+      box-shadow: 0 25px 45px rgba(0,0,0,0.5);
+      animation: modalPop 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+    @keyframes modalPop {
+      from { opacity: 0; transform: scale(0.95);}
+      to { opacity: 1; transform: scale(1);}
+    }
+    .modal-content h3 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+    .modal-input {
+      width: 100%;
+      padding: 12px 16px;
+      margin: 12px 0;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid #2a6df4;
+      border-radius: 32px;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+    }
+    .modal-input:focus {
+      border-color: #ffb347;
+      box-shadow: 0 0 8px #ffb347;
+    }
+    .pay-now-btn {
+      background: linear-gradient(95deg, #2a6df4, #9b4dff);
+      width: 100%;
+      padding: 12px;
+      border-radius: 40px;
+      font-weight: bold;
+      font-size: 1rem;
+      margin-top: 1rem;
+      border: none;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .close-modal {
+      float: right;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #ffb347;
+    }
+    /* whatsapp float */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #25D366;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+      z-index: 1100;
+      transition: 0.2s;
+    }
+    .whatsapp-float a {
+      color: white;
+      font-size: 2rem;
+    }
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #25D366;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid rgba(42,109,244,0.2);
+      margin-top: 3rem;
+    }
+    @media (max-width: 760px) {
+      .navbar { flex-direction: column; padding: 1rem; }
+      .hero h1 { font-size: 2rem; }
+      .section-title { font-size: 1.8rem; }
+    }
+    button, .apply-btn { cursor: pointer; }
+  </style>
+</head>
+<body>
+  <!-- PRELOADER (loading animation) -->
+  <div class="preloader" id="preloader">
+    <div class="loader-ring"></div>
+  </div>
+
+  <!-- STICKY NAVBAR -->
+  <nav class="navbar">
+    <div class="logo"><i class="fas fa-charging-station"></i> NEO<span style="color:#2a6df4;">LOAN</span></div>
+    <div class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#loans">Packages</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section id="home" class="hero container">
+      <h1>Smart loans, <span style="color: #ffb347;">instant fees</span></h1>
+      <p>Transparent service fees · Lightning approval · 100% digital</p>
+      <div class="hero-glow"><i class="fas fa-shield-alt"></i> Licensed fintech partner</div>
+    </section>
+
+    <!-- LOAN PACKAGES SECTION -->
+    <section id="loans" class="container">
+      <h2 class="section-title"><i class="fas fa-coins"></i> Loan service packages</h2>
+      <div class="cards-grid" id="loanCardsContainer">
+        <!-- cards will be dynamically inserted via JS for clarity but can also static -->
+      </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section id="faq" class="container">
+      <h2 class="section-title"><i class="fas fa-circle-question"></i> Frequently Asked</h2>
+      <div class="faq-grid">
+        <div class="faq-item"><div class="faq-question"><i class="fas fa-bolt"></i> How fast is approval?</div><p>Real-time processing, instant fee payment unlocks loan offer.</p></div>
+        <div class="faq-item"><div class="faq-question"><i class="fas fa-lock"></i> Is my data secure?</div><p>End-to-end encryption & PCI compliant payments via Paystack.</p></div>
+        <div class="faq-item"><div class="faq-question"><i class="fas fa-clock"></i> Service fee refundable?</div><p>Non-refundable once loan is processed, transparent always.</p></div>
+      </div>
+    </section>
+
+    <!-- CONTACT + SUCCESS SECTION -->
+    <section id="contact" class="container">
+      <h2 class="section-title"><i class="fas fa-headset"></i> Get in touch</h2>
+      <div class="contact-section">
+        <div class="contact-info">
+          <p><i class="fas fa-envelope"></i> hello@neoloan.co.ke</p>
+          <p><i class="fas fa-phone-alt"></i> +254 700 123 456</p>
+          <p><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya · Fintech hub</p>
+        </div>
+        <div class="contact-info">
+          <p><i class="fas fa-clock"></i> Support: 24/7 live chat</p>
+          <p><i class="fab fa-whatsapp"></i> WhatsApp business line</p>
+        </div>
+      </div>
+      <!-- SUCCESS SECTION (hidden initially, shown after payment) -->
+      <div id="successSection" class="success-card">
+        <div class="checkmark"><i class="fas fa-check-circle"></i></div>
+        <h3>✅ Payment Successful!</h3>
+        <p id="successRefMsg">Reference: -----</p>
+        <p>Your loan application is being processed. Thank you for trusting NEO LOAN.</p>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p>© 2025 NEO LOAN — Advanced fintech solutions. *Terms apply</p>
+  </footer>
+
+  <!-- FLOATING WHATSAPP BUTTON -->
+  <div class="whatsapp-float">
+    <a href="https://wa.me/254712345678?text=Hello%21%20I%20need%20assistance%20with%20loan%20service%20fees" target="_blank"><i class="fab fa-whatsapp"></i></a>
+  </div>
+
+  <!-- MODAL POPUP (Apply + Payment) -->
+  <div id="paymentModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeModalBtn">&times;</span>
+      <h3><i class="fas fa-wallet"></i> Complete payment</h3>
+      <div id="modalLoanSummary" style="background:rgba(0,230,178,0.1); padding:8px; border-radius:24px; margin:12px 0;">
+        <p><strong>📌 Loan amount: </strong><span id="modalLoanAmountSpan">KSH 0</span></p>
+        <p><strong>💸 Service fee: </strong><span id="modalFeeSpan">KSH 0</span></p>
+      </div>
+      <input type="text" id="fullName" class="modal-input" placeholder="Full name *" autocomplete="name">
+      <input type="tel" id="phoneNumber" class="modal-input" placeholder="Phone number *">
+      <input type="email" id="emailAddress" class="modal-input" placeholder="Email address *">
+      <button id="confirmPayBtn" class="pay-now-btn"><i class="fas fa-credit-card"></i> Pay with Paystack</button>
+    </div>
+  </div>
+
+  <script>
+    // ---------- LOAN DATA ----------
+    const loanPackages = [
+      { loan: 3200, fee: 199 },
+      { loan: 7800, fee: 399 },
+      { loan: 16200, fee: 699 },
+      { loan: 30800, fee: 999 },
+      { loan: 47200, fee: 1999 }
+    ];
+
+    // Helper formatting KSH
+    function formatKsh(amount) {
+      return `KSH ${amount.toLocaleString()}`;
+    }
+
+    // Render loan cards dynamically
+    const cardsContainer = document.getElementById('loanCardsContainer');
+    function buildCards() {
+      cardsContainer.innerHTML = '';
+      loanPackages.forEach(pkg => {
+        const card = document.createElement('div');
+        card.className = 'loan-card';
+        card.innerHTML = `
+          <div class="loan-amount">${formatKsh(pkg.loan)}</div>
+          <div class="fee"><i class="fas fa-tag"></i> Service Fee: ${formatKsh(pkg.fee)}</div>
+          <button class="apply-btn" data-loan="${pkg.loan}" data-fee="${pkg.fee}"><i class="fas fa-hand-holding-usd"></i> Apply now</button>
+        `;
+        cardsContainer.appendChild(card);
+      });
+      // attach event listeners after render
+      document.querySelectorAll('.apply-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const loan = parseInt(btn.getAttribute('data-loan'));
+          const fee = parseInt(btn.getAttribute('data-fee'));
+          openPaymentModal(loan, fee);
+        });
+      });
+    }
+    buildCards();
+
+    // Modal logic & Paystack vars
+    const modal = document.getElementById('paymentModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modalLoanAmountSpan = document.getElementById('modalLoanAmountSpan');
+    const modalFeeSpan = document.getElementById('modalFeeSpan');
+    const confirmPayBtn = document.getElementById('confirmPayBtn');
+
+    let selectedLoan = 0;
+    let selectedFee = 0;
+
+    function openPaymentModal(loanAmount, feeAmount) {
+      selectedLoan = loanAmount;
+      selectedFee = feeAmount;
+      modalLoanAmountSpan.innerText = formatKsh(loanAmount);
+      modalFeeSpan.innerText = formatKsh(feeAmount);
+      modal.style.display = 'flex';
+      // clear previous inputs
+      document.getElementById('fullName').value = '';
+      document.getElementById('phoneNumber').value = '';
+      document.getElementById('emailAddress').value = '';
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+
+    closeModalBtn.addEventListener('click', closeModal);
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // Success Animation + redirect to success section + admin webhook
+    function showSuccessAndRedirect(paymentReference, userEmail, userName, userPhone, loanAmountVal, feeVal) {
+      // Hide modal if open
+      closeModal();
+      // show success section with animation
+      const successDiv = document.getElementById('successSection');
+      const refSpan = document.getElementById('successRefMsg');
+      refSpan.innerHTML = `✅ Reference: ${paymentReference} <br> Loan: ${formatKsh(loanAmountVal)} · Fee: ${formatKsh(feeVal)}`;
+      successDiv.classList.add('show-success');
+      // Smooth scroll to success section
+      document.getElementById('contact').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // extra small spark animation effect - beautiful confetti-like pulse
+      successDiv.style.animation = 'none';
+      successDiv.offsetHeight;
+      successDiv.style.animation = 'fadeSlideUp 0.6s ease';
+      
+      // ADMIN NOTIFICATION (example fetch to backend endpoint)
+      const adminPayload = {
+        name: userName,
+        phone: userPhone,
+        email: userEmail,
+        loan_amount: loanAmountVal,
+        service_fee: feeVal,
+        paystack_reference: paymentReference,
+        timestamp: new Date().toISOString()
+      };
+      // Simulate POST request to '/payment-success' (webhook)
+      fetch('/payment-success', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(adminPayload)
+      }).catch(err => {
+        // just console log, because demo backend not active. But it shows implementation
+        console.warn('Webhook endpoint simulation (no actual server):', err);
+        console.log('Admin data would be sent:', adminPayload);
+      });
+      // also log for dev visibility (beautiful)
+      console.log('[ADMIN NOTIFICATION] POST to /payment-success', adminPayload);
+    }
+
+    // Paystack Payment Initialization
+    function initiatePaystackPayment(userFullName, userPhone, userEmail, feeAmount) {
+      // feeAmount in KES (service fee), convert to cents (KES * 100)
+      const amountInCents = Math.round(feeAmount * 100);  
+      const paystackKey = "pk_test_xxxxxxxxxxxxxxxxx";  // placeholder public key
+      // generate unique reference
+      const ref = "NLOAN-" + Date.now() + "-" + Math.floor(Math.random() * 1000000);
+      
+      const handler = PaystackPop.setup({
+        key: paystackKey,
+        email: userEmail,
+        amount: amountInCents,
+        currency: "KES",
+        ref: ref,
+        metadata: {
+          custom_fields: [
+            { display_name: "Full Name", variable_name: "full_name", value: userFullName },
+            { display_name: "Phone Number", variable_name: "phone_number", value: userPhone },
+            { display_name: "Loan Requested", variable_name: "loan_amount", value: selectedLoan.toString() },
+            { display_name: "Service Fee", variable_name: "service_fee", value: selectedFee.toString() }
+          ]
+        },
+        callback: function(response) {
+          // successful payment
+          const paymentRef = response.reference;
+          // Show success & send admin webhook
+          showSuccessAndRedirect(paymentRef, userEmail, userFullName, userPhone, selectedLoan, selectedFee);
+          // optional reset selected loan data after success
+        },
+        onClose: function() {
+          // user closed popup - do nothing
+          console.log("Payment window closed");
+        }
+      });
+      handler.openIframe();
+    }
+
+    // Validate modal & fire Paystack
+    confirmPayBtn.addEventListener('click', () => {
+      const fullName = document.getElementById('fullName').value.trim();
+      const phone = document.getElementById('phoneNumber').value.trim();
+      const email = document.getElementById('emailAddress').value.trim();
+      if (!fullName || !phone || !email) {
+        alert("❌ Please fill in Full name, Phone number, and Email.");
+        return;
+      }
+      if (!email.includes('@') || !email.includes('.')) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+      if (selectedFee <= 0) {
+        alert("Invalid fee amount. Please choose a loan package again.");
+        return;
+      }
+      // call paystack inline
+      initiatePaystackPayment(fullName, phone, email, selectedFee);
+    });
+
+    // ---------- PAGE LOADER (loading animation) ----------
+    window.addEventListener('load', () => {
+      const preloader = document.getElementById('preloader');
+      if (preloader) {
+        setTimeout(() => {
+          preloader.style.opacity = '0';
+          preloader.style.visibility = 'hidden';
+          setTimeout(() => { preloader.style.display = 'none'; }, 400);
+        }, 800);
+      }
+      // Additional backdrop effect and sanity
+    });
+
+    // Extra: Smooth glow for all cards - already included in CSS
+    // Also ensure that the modal shows updated amounts when clicked different package each time
+    // All good.
+
+    // In case of manual re-trigger: pre-check that Paystack is loaded
+    if (typeof PaystackPop === 'undefined') {
+      console.warn("Paystack script not loaded, but CDN should be loaded.");
+    }
+    // Additional minor animation for floating wpp
+    // Admin notification example already inside showSuccessAndRedirect, perfect.
+
+    // Ensure hero links functional
+    document.querySelectorAll('.nav-links a').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const targetEl = document.getElementById(targetId);
+        if(targetEl) targetEl.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+                                                                                                                                                                                     </html>
